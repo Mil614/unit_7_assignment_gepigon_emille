@@ -9,25 +9,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Fetch characters from API
   Future<List<dynamic>> fetchCharacters() async {
     final response =
         await http.get(Uri.parse('https://narutodb.xyz/api/character'));
 
     if (response.statusCode == 200) {
-      // Decode the response body
       var jsonResponse = json.decode(response.body);
 
-      // Print the raw response to see its structure
       print(jsonResponse);
 
-      // Adjust based on the response structure
       if (jsonResponse is List) {
         return jsonResponse;
       } else if (jsonResponse is Map) {
-        // Check if the response is a map, and it contains a 'characters' key
         if (jsonResponse.containsKey('characters')) {
-          return jsonResponse['characters']; // Return the characters list
+          return jsonResponse['characters'];
         } else {
           throw Exception(
               'Unexpected response structure: Missing "characters" key');
@@ -65,16 +60,13 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, index) {
               final character = characters[index];
 
-              // Checking if 'images' key is present and if the list has at least one element
               String imageUrl = '';
               if (character['images'] != null &&
                   character['images'].isNotEmpty) {
-                imageUrl = character['images'][0]; // Safe access
+                imageUrl = character['images'][0];
               } else {
-                imageUrl = 'https://via.placeholder.com/150'; // Fallback image
+                imageUrl = 'https://via.placeholder.com/150';
               }
-
-              // Providing fallback for 'name' and 'about' keys in case they are null
               String name = character['name'] ?? 'Unknown Character';
               String description =
                   character['about'] ?? "A character from Naruto.";
@@ -91,8 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Row(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                            12.0), // Apply rounded corners
+                        borderRadius: BorderRadius.circular(12.0),
                         child: CircleAvatar(
                           backgroundImage: NetworkImage(imageUrl),
                           radius: 25,
